@@ -8,6 +8,13 @@
     <h1 th:text="${title}"></h1>
     <ul th:each="todo : ${todos}" th:object="${todo}">
         <li th:text="*{content}"></li>
+        <form th:action="@{/{id}(id=*{id})}" th:method="put">
+            <input type="text" name="content" />
+            <button type="submit">更新</button>
+        </form>
+        <form th:action="@{/{id}(id=*{id})}" th:method="delete">
+            <button type="submit">削除</button>
+        </form>
     </ul>
     <form action="#"  th:action="@{/}" th:object="${newTodo}" method="post">
         <input type="text" th:field="*{content}" />
