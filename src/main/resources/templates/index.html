@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1 th:text="${title}"></h1>
+    <ul th:each="todo : ${todos}" th:object="${todo}">
+        <li th:text="*{content}"></li>
+    </ul>
+    <form action="#"  th:action="@{/}" th:object="${newTodo}" method="post">
+        <input type="text" th:field="*{content}" />
+        <button type="submit">追加</button>
+    </form>
+    <image src="https://i.ytimg.com/vi/_ZJ8MrEXIio/maxresdefault.jpg" />
+</body>
+</html>
