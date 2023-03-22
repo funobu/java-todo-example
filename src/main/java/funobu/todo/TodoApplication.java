@@ -25,7 +25,7 @@ public class TodoApplication {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("title", "みこち");
+        model.addAttribute("title", "TODO.app");
         model.addAttribute("todos", this.todos);
         model.addAttribute("newTodo", new Todo());
         return "/index";
