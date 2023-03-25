@@ -1,5 +1,6 @@
 package funobu.todo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
@@ -23,41 +24,58 @@ public class TodoApplication {
 
     private List<Todo> todos;
 
+    @Autowired
+    private TodoRepository todoRepository;
+
     @GetMapping("/")
     public String index(Model model) {
+        List<Todo> todos = new ArrayList<Todo>();
+        try {
+            Iterator<Todo> result = this.todoRepository.findAll().iterator();
+            while (result.hasNext()) {
+                todos.add(result.next());
+            }
+        } catch (Exception e) {
+
+        }
         model.addAttribute("title", "TODO.app");
-        model.addAttribute("todos", this.todos);
+        model.addAttribute("todos", todos);
         model.addAttribute("newTodo", new Todo());
         return "/index";
     }
 
     @PostMapping("/")
     public String postIndex(@ModelAttribute Todo newTodo, Model model) {
-        newTodo.setId(UUID.randomUUID().toString());
-        this.todos.add(newTodo);
-        System.out.println(newTodo.getContent());
+        try {
+            newTodo.setId(UUID.randomUUID().toString());
+            this.todoRepository.save(newTodo);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         return "redirect:/";
     }
 
     @PutMapping("/{id}")
     public String updateTodoByID(@PathVariable String id, @RequestParam String content, Model model) {
-        todos.forEach(todo -> {
-            if (todo.getId().equals(id)) {
-                todo.setContent(content);
-            }
-        });
+        try {
+            Todo todo = this.todoRepository.findById(id).get();
+            todo.setContent(content);
+            this.todoRepository.save(todo);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         return "redirect:/";
     }
 
     @DeleteMapping("/{id}")
     public String deleteTodoByID(@PathVariable String id, Model model) {
-        Iterator<Todo> iTodos = todos.iterator();
-        while (iTodos.hasNext()) {
-            Todo iTodo = iTodos.next();
-            if (iTodo.getId().equals(id)) {
-                iTodos.remove();
-            }
+        try {
+            Todo todo = this.todoRepository.findById(id).get();
+            this.todoRepository.delete(todo);
+        } catch (Exception e) {
+            System.out.println(e);
         }
+
         return "redirect:/";
     }
 }

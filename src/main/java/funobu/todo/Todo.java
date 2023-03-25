@@ -1,6 +1,11 @@
 package funobu.todo;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Todo {
+    @Id
     private String id;
     private String content;
 
